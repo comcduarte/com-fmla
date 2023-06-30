@@ -1,14 +1,9 @@
 <?php
+namespace Fmla;
 
-use Fmla\Controller\FmlaConfigController;
-use Fmla\Controller\FmlaController;
-use Fmla\Controller\Factory\FmlaConfigControllerFactory;
-use Fmla\Controller\Factory\FmlaControllerFactory;
-use Fmla\Form\FmlaForm;
-use Fmla\Form\Factory\FmlaFormFactory;
-use Fmla\Service\Factory\FmlaModelAdapterFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
     'router' => [
@@ -20,7 +15,7 @@ return [
                     'route' => '/fmla',
                     'defaults' => [
                         'action' => 'index',
-                        'controller' => FmlaController::class,
+                        'controller' => Controller\FmlaController::class,
                     ]
                 ],
                 'may_terminate' => FALSE,
@@ -32,7 +27,7 @@ return [
                             'route' => '/config[/:action]',
                             'defaults' => [
                                 'action' => 'index',
-                                'controller' => FmlaConfigController::class,
+                                'controller' => Controller\FmlaConfigController::class,
                             ],
                         ],
                     ],
@@ -43,7 +38,7 @@ return [
                             'route' => '/[:action[/:uuid]]',
                             'defaults' => [
                                 'action' => 'index',
-                                'controller' => FmlaController::class,
+                                'controller' => Controller\FmlaController::class,
                             ],
                         ],
                     ],
@@ -62,16 +57,16 @@ return [
     ],
     'controllers' => [
         'aliases' => [
-            'fmla' => FmlaController::class,
+            'fmla' => Controller\FmlaController::class,
         ],
         'factories' => [
-            FmlaController::class => FmlaControllerFactory::class,
-            FmlaConfigController::class => FmlaConfigControllerFactory::class,
+            Controller\FmlaController::class => Controller\Factory\FmlaControllerFactory::class,
+            Controller\FmlaConfigController::class => Controller\Factory\FmlaConfigControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            FmlaForm::class => FmlaFormFactory::class,
+            Form\FmlaForm::class => Form\Factory\FmlaFormFactory::class,
         ],
     ],
     'navigation' => [
@@ -120,12 +115,23 @@ return [
             'fmla-model-adapter-config' => 'model-adapter-config',
         ],
         'factories' => [
-            'fmla-model-adapter' => FmlaModelAdapterFactory::class,
+            'fmla-model-adapter' => Service\Factory\FmlaModelAdapterFactory::class,
+            Listener\FmlaListener::class => Listener\Factory\FmlaListenerFactory::class,
+        ],
+    ],
+    'view_helpers' => [
+        'factories' => [
+            View\Helper\FmlaRecords::class => InvokableFactory::class,
+        ],
+        'aliases' => [
+            'fmlarecords' => View\Helper\FmlaRecords::class,
+            'fmla_records' => View\Helper\FmlaRecords::class,
         ],
     ],
     'view_manager' => [
         'template_map' => [
             'fmla/config' => __DIR__ . '/../view/fmla/config/index.phtml',
+            'fmla/update' => __DIR__ . '/../view/fmla/fmla/update.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
