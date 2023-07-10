@@ -3,7 +3,7 @@ namespace Fmla\Form\Factory;
 
 use Fmla\Form\FmlaForm;
 use Fmla\Model\Fmla;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class FmlaFormFactory implements FactoryInterface

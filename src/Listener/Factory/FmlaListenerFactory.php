@@ -2,7 +2,7 @@
 namespace Fmla\Listener\Factory;
 
 use Fmla\Listener\FmlaListener;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class FmlaListenerFactory implements FactoryInterface
