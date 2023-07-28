@@ -25,6 +25,29 @@ class FmlaController extends AbstractBaseController
         $this->model->setSelect($select);
         
         $view = parent::indexAction();
+        $view->setTemplate('base/subtable');
+        
+        $params = [
+            [
+                'route' => 'paycode/default',
+                'action' => 'update',
+                'key' => 'UUID',
+                'label' => 'Update',
+            ],
+            [
+                'route' => 'paycode/default',
+                'action' => 'delete',
+                'key' => 'UUID',
+                'label' => 'Delete',
+            ],
+        ];
+        
+        $view->setvariables ([
+            'params' => $params,
+            'search' => true,
+            'title' => 'Active FMLA',
+        ]);
+        
         return $view;
     }
     
