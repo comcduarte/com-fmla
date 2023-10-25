@@ -29,13 +29,13 @@ class FmlaController extends AbstractBaseController
         
         $params = [
             [
-                'route' => 'paycode/default',
+                'route' => 'fmla/default',
                 'action' => 'update',
                 'key' => 'UUID',
                 'label' => 'Update',
             ],
             [
-                'route' => 'paycode/default',
+                'route' => 'fmla/default',
                 'action' => 'delete',
                 'key' => 'UUID',
                 'label' => 'Delete',
