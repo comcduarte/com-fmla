@@ -13,7 +13,6 @@ use Leave\Model\LeaveModel;
 use Timecard\Controller\TimecardLineController;
 use Timecard\Controller\TimecardSignatureController;
 use Timecard\Model\PaycodeModel;
-use Timecard\Model\TimecardLineModel;
 use Timecard\Model\TimecardModel;
 use Timecard\Model\Entity\TimecardEntity;
 use Timecard\Traits\DateAwareTrait;
@@ -104,7 +103,6 @@ class FmlaListener implements ListenerAggregateInterface
          * @var Parameters $params
          */
         $params = $e->getParams();
-        $paycode = new PaycodeModel($this->adapter);
         
         /**
          * @var TimecardEntity $entity
@@ -123,26 +121,7 @@ class FmlaListener implements ListenerAggregateInterface
          ****************************************/
         $fmla = new Fmla($this->adapter);
         $fmla->read(['EMP_UUID' => $entity->EMP_UUID, 'STATUS' => Fmla::ACTIVE_STATUS]);
-        
-        $total = 0;
-        /**
-         * @var TimecardLineModel $line
-         */
-        foreach ($entity->TIMECARD_LINES as $line) {
-            $paycode->read(['UUID' => $line->PAY_UUID]);
-            
-            /****************************************
-             * SKIP IF NOT FMLA PAYCODE
-             ****************************************/
-            if (!preg_match('/FMLA/', $paycode->CODE)) { continue; }
-            
-            foreach ($this->DAYS as $day) {
-                $total += floatval($line->$day);
-            }
-        }
-        
-        $fmla->BANK = $fmla->BANK - $total;
-        $fmla->update();
+        $fmla->updateBank();
         
         return;
     }
