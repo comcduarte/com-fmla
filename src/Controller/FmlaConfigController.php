@@ -3,6 +3,7 @@ namespace Fmla\Controller;
 
 use Components\Controller\AbstractConfigController;
 use Laminas\Db\Sql\Sql;
+use Laminas\Db\Sql\Ddl\AlterTable;
 use Laminas\Db\Sql\Ddl\CreateTable;
 use Laminas\Db\Sql\Ddl\DropTable;
 use Laminas\Db\Sql\Ddl\Column\Date;
@@ -10,6 +11,7 @@ use Laminas\Db\Sql\Ddl\Column\Datetime;
 use Laminas\Db\Sql\Ddl\Column\Integer;
 use Laminas\Db\Sql\Ddl\Column\Varchar;
 use Laminas\Db\Sql\Ddl\Constraint\PrimaryKey;
+use Timecard\Model\PaycodeModel;
 
 class FmlaConfigController extends AbstractConfigController
 {
@@ -46,6 +48,17 @@ class FmlaConfigController extends AbstractConfigController
         $ddl->addColumn(new Varchar('EMP_UUID', 36, TRUE));
         
         $ddl->addConstraint(new PrimaryKey('UUID'));
+        
+        $this->adapter->query($sql->buildSqlString($ddl), $this->adapter::QUERY_MODE_EXECUTE);
+        unset($ddl);
+        
+        /******************************
+         * ALTER PAYCODE TABLE
+         ******************************/
+        $paycode = new PaycodeModel($this->adapter);
+        $ddl = new AlterTable($paycode->getTableName());
+        
+        $ddl->addColumn(new Varchar('LEAVE_CODE', 36, TRUE));
         
         $this->adapter->query($sql->buildSqlString($ddl), $this->adapter::QUERY_MODE_EXECUTE);
         unset($ddl);
